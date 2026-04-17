@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'biome_models.dart';
 
 const List<PageMeta> biomePageMeta = [
-  PageMeta('Coniferous Forest', Icons.forest),
+  PageMeta('Home', Icons.forest),
   PageMeta('Characteristics', Icons.thermostat),
-  PageMeta('Plants', Icons.spa),
-  PageMeta('Animals', Icons.pets),
-  PageMeta('Threats', Icons.warning_amber),
-  PageMeta('Why Visit', Icons.explore),
+  PageMeta('Species', Icons.nature),
+  PageMeta('Context', Icons.warning_amber),
   PageMeta('References', Icons.menu_book),
 ];
 

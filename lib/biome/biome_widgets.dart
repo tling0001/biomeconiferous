@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'biome_models.dart';
 
 class BiomePageScaffold extends StatefulWidget {
-  const BiomePageScaffold({required this.child, required this.title, super.key});
+  const BiomePageScaffold({
+    required this.child,
+    required this.title,
+    super.key,
+  });
 
   final Widget child;
   final String title;
@@ -18,23 +22,81 @@ class _BiomePageScaffoldState extends State<BiomePageScaffold> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(32, 16, 32, 28),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.title,
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.w800,
-              color: colorScheme.primary,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final horizontalPadding = width >= 1200
+            ? 32.0
+            : (width >= 700 ? 24.0 : 16.0);
+        final contentMaxWidth = width >= 1200
+            ? 1120.0
+            : (width >= 700 ? 920.0 : double.infinity);
+
+        return ScrollConfiguration(
+          behavior: const _BiomeScrollBehavior(),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            padding: EdgeInsets.fromLTRB(
+              horizontalPadding,
+              16,
+              horizontalPadding,
+              24,
+            ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: contentMaxWidth),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.title,
+                      style: TextStyle(
+                        fontSize: width >= 900 ? 32 : 28,
+                        fontWeight: FontWeight.w800,
+                        color: colorScheme.primary,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    widget.child,
+                  ],
+                ),
+              ),
             ),
           ),
-          const SizedBox(height: 24),
-          widget.child,
-        ],
-      ),
+        );
+      },
+    );
+  }
+}
+
+class _BiomeScrollBehavior extends MaterialScrollBehavior {
+  const _BiomeScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.stylus,
+    PointerDeviceKind.invertedStylus,
+    PointerDeviceKind.trackpad,
+  };
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    return const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
+  }
+
+  @override
+  Widget buildOverscrollIndicator(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
+    return StretchingOverscrollIndicator(
+      axisDirection: details.direction,
+      child: child,
     );
   }
 }
@@ -107,9 +169,7 @@ class AnimatedImageCard extends StatelessWidget {
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         color: const Color(0xFFD4EDE4),
-                        child: const Center(
-                          child: Icon(Icons.image, size: 32),
-                        ),
+                        child: const Center(child: Icon(Icons.image, size: 32)),
                       );
                     },
                   ),

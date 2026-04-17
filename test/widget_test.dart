@@ -18,6 +18,10 @@ void main() {
     expect(find.text('Coniferous Forest Biome'), findsOneWidget);
     final hasBottomBar = find.byType(NavigationBar).evaluate().isNotEmpty;
     final hasSideRail = find.byType(NavigationRail).evaluate().isNotEmpty;
-    expect(hasBottomBar || hasSideRail, isTrue);
+    final hasHorizontalAdaptiveBar =
+        find.byKey(const Key('adaptive-horizontal-bottom-bar'))
+            .evaluate()
+            .isNotEmpty;
+    expect(hasBottomBar || hasSideRail || hasHorizontalAdaptiveBar, isTrue);
   });
 }

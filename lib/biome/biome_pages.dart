@@ -4,21 +4,17 @@ import 'biome_data.dart';
 import 'biome_models.dart';
 import 'biome_widgets.dart';
 
-Widget buildBiomePage(int index) {
+Widget buildBiomePage(int index, {VoidCallback? onStartExploring}) {
   switch (index) {
     case 0:
-      return const TitleIntroPage();
+      return TitleIntroPage(onStartExploring: onStartExploring);
     case 1:
       return const CharacteristicsPage();
     case 2:
-      return const PlantsPage();
+      return const SpeciesPage();
     case 3:
-      return const AnimalsPage();
-    case 4:
       return const ThreatsPage();
-    case 5:
-      return const VisitPage();
-    case 6:
+    case 4:
       return const ReferencesPage();
     default:
       return const SizedBox.shrink();
@@ -26,7 +22,9 @@ Widget buildBiomePage(int index) {
 }
 
 class TitleIntroPage extends StatelessWidget {
-  const TitleIntroPage({super.key});
+  const TitleIntroPage({this.onStartExploring, super.key});
+
+  final VoidCallback? onStartExploring;
 
   @override
   Widget build(BuildContext context) {
@@ -34,112 +32,102 @@ class TitleIntroPage extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return BiomePageScaffold(
-      title: '',
+      title: 'Home',
       child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(28),
-          child: Stack(
-            children: [
-              SizedBox(
-                height: 280,
-                width: double.infinity,
-                child: Image.asset(
-                  'images/hero_forest.jpg',
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: const Color(0xFFD4EDE4),
-                      child: const Center(
-                        child: Icon(Icons.image, size: 48),
-                      ),
-                    );
-                  },
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(28),
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: 280,
+                  width: double.infinity,
+                  child: Image.asset(
+                    'images/hero_forest.jpg',
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: const Color(0xFFD4EDE4),
+                        child: const Center(child: Icon(Icons.image, size: 48)),
+                      );
+                    },
+                  ),
                 ),
-              ),
-              Positioned.fill(
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.black.withValues(alpha: 0.15),
-                        Colors.black.withValues(alpha: 0.55),
-                      ],
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.15),
+                          Colors.black.withValues(alpha: 0.55),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Positioned(
-                left: 24,
-                right: 24,
-                bottom: 24,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Coniferous Forest Biome',
-                      style: textTheme.headlineLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
+                Positioned(
+                  left: 24,
+                  right: 24,
+                  bottom: 24,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Coniferous Forest Biome',
+                        style: textTheme.headlineLarge?.copyWith(
+                          color: const Color.fromRGBO(255, 255, 255, 1),
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'A web-based tour of climate, biodiversity, adaptations, threats, and why these forests matter.',
-                      style: textTheme.titleMedium?.copyWith(
-                        color: Colors.white.withValues(alpha: 0.95),
+                      const SizedBox(height: 8),
+                      Text(
+                        'A carefully designed tour of climate, biodiversity, adaptations, threats, and why these forests matter.',
+                        style: textTheme.titleMedium?.copyWith(
+                          color: Colors.white.withValues(alpha: 0.95),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 18),
-        AnimatedInfoCard(
-          index: 0,
-          child: Text(
-            'Coniferous forests are dominated by cone-bearing evergreen trees such as spruce, fir, pine, and hemlock. They form one of Earth\'s largest terrestrial biomes and are strongly tied to nearby freshwater systems like cold streams, peatlands, and snow-fed lakes.',
-            style: textTheme.bodyLarge,
+          const SizedBox(height: 18),
+          AnimatedInfoCard(
+            index: 0,
+            child: Text(
+              'Coniferous forests are dominated by cone-bearing evergreen trees such as spruce, fir, pine, and hemlock. They form one of Earth\'s largest terrestrial biomes and are strongly tied to nearby freshwater systems like cold streams, peatlands, and snow-fed lakes.',
+              style: textTheme.bodyLarge,
+            ),
           ),
-        ),
-        const SizedBox(height: 12),
-        AnimatedInfoCard(
-          index: 1,
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: const [
-              FactChip(
-                label: 'Biome Type',
-                value: 'Terrestrial + freshwater links',
-              ),
-              FactChip(label: 'Core Theme', value: 'Coniferous forest (taiga)'),
-              FactChip(label: 'Design System', value: 'Google Material 3'),
-            ],
-          ),
-        ),
-        const SizedBox(height: 18),
-        FilledButton.icon(
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  'Use navigation to explore all project sections.',
-                  style: TextStyle(color: colorScheme.onInverseSurface),
+          const SizedBox(height: 12),
+          AnimatedInfoCard(
+            index: 1,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: const [
+                FactChip(label: 'Biome Type', value: 'Terrestrial'),
+                FactChip(label: 'Biome', value: 'Coniferous forest (taiga)'),
+                FactChip(
+                  label: 'Design System',
+                  value: 'Google Material Design 3',
                 ),
-              ),
-            );
-          },
-          icon: const Icon(Icons.navigation),
-          label: const Text('Start Exploring'),
-        ),
-      ],
-    ));
+              ],
+            ),
+          ),
+          const SizedBox(height: 18),
+          FilledButton.icon(
+            onPressed: onStartExploring,
+            icon: const Icon(Icons.navigation),
+            label: const Text('Start Exploring'),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -153,175 +141,262 @@ class CharacteristicsPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        Text(
-          'Coniferous forests are usually cool to cold, with long winters, short growing seasons, and moderate precipitation that often falls as snow. Nearby aquatic systems are commonly cold, oxygen-rich, and strongly seasonal due to spring snowmelt.',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 16),
-        const AnimatedInfoCard(
-          index: 0,
-          child: ComparisonTable(
-            rows: [
-              ComparisonRow(
-                'Distribution/location',
-                'Northern North America, Europe, and Asia; mountain belts at lower latitudes',
-                'Cold streams, bogs, ponds, and lakes within and around coniferous regions',
-              ),
-              ComparisonRow(
-                'Precipitation / Physical-Chemical Environment',
-                'About 30-85 cm/year; much as snow',
-                'Freshwater, low nutrient levels in many systems, high dissolved oxygen in cold water',
-              ),
-              ComparisonRow(
-                'Temperature',
-                'Average annual about -5 C to 10 C',
-                'Water often near 0-15 C depending on season and depth',
-              ),
-              ComparisonRow(
-                'Climate / Geological Features',
-                'Acidic soils, slow decomposition, glacial landforms common',
-                'Glacial lakes, peatlands, stream channels, seasonal ice cover',
-              ),
-              ComparisonRow(
-                'Zonation / Seasons',
-                'Distinct canopy-understory-floor layers; clear seasons',
-                'Shoreline (littoral), open water (limnetic), deep water (profundal); seasons affect ice, flow, and oxygen',
-              ),
-            ],
+          Text(
+            'Coniferous forests are usually cool to cold, with long winters, short growing seasons, and moderate precipitation that often falls as snow. Nearby aquatic systems are commonly cold, oxygen-rich, and strongly seasonal due to spring snowmelt.',
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
-        ),
-        const SizedBox(height: 16),
-        const AnimatedInfoCard(
-          index: 1,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Representative Countries and Regions'),
-              SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  Chip(label: Text('Canada')),
-                  Chip(
-                    label: Text(
-                      'United States (Alaska, Rockies, Pacific Northwest)',
+          const SizedBox(height: 16),
+          const AnimatedInfoCard(
+            index: 0,
+            child: ComparisonTable(
+              rows: [
+                ComparisonRow(
+                  'Distribution/location',
+                  'Northern North America, Europe, and Asia; mountain belts at lower latitudes',
+                  'Cold streams, bogs, ponds, and lakes within and around coniferous regions',
+                ),
+                ComparisonRow(
+                  'Precipitation / Physical-Chemical Environment',
+                  'About 30-85 cm/year; much as snow',
+                  'Freshwater, low nutrient levels in many systems, high dissolved oxygen in cold water',
+                ),
+                ComparisonRow(
+                  'Temperature',
+                  'Average annual about -5 C to 10 C',
+                  'Water often near 0-15 C depending on season and depth',
+                ),
+                ComparisonRow(
+                  'Climate / Geological Features',
+                  'Acidic soils, slow decomposition, glacial landforms common',
+                  'Glacial lakes, peatlands, stream channels, seasonal ice cover',
+                ),
+                ComparisonRow(
+                  'Zonation / Seasons',
+                  'Distinct canopy-understory-floor layers; clear seasons',
+                  'Shoreline (littoral), open water (limnetic), deep water (profundal); seasons affect ice, flow, and oxygen',
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          const AnimatedInfoCard(
+            index: 1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Representative Countries and Regions'),
+                SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    Chip(label: Text('Canada')),
+                    Chip(
+                      label: Text(
+                        'United States (Alaska, Rockies, Pacific Northwest)',
+                      ),
                     ),
+                    Chip(label: Text('Norway')),
+                    Chip(label: Text('Sweden')),
+                    Chip(label: Text('Finland')),
+                    Chip(label: Text('Russia (Siberia)')),
+                    Chip(label: Text('Japan (Hokkaido)')),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          const AnimatedImageCard(
+            index: 2,
+            title: 'Map of Coniferous Forest Distribution',
+            imageAsset: 'images/map_taiga.png',
+            caption:
+                'Global taiga/coniferous forest zone concentrated across high northern latitudes.',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SpeciesPage extends StatelessWidget {
+  const SpeciesPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BiomePageScaffold(
+      title: 'Species',
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final wideLayout = constraints.maxWidth >= 900;
+
+          final sections = [
+            Expanded(
+              child: _SpeciesGroup(
+                title: 'Plants',
+                icon: Icons.eco_outlined,
+                items: plants,
+                imageCards: const [
+                  AnimatedImageCard(
+                    index: 6,
+                    title: 'Plant Image 1: Black Spruce',
+                    imageAsset: 'images/plant_black_spruce.jpg',
+                    caption:
+                        'Black spruce is highly adapted to cold, nutrient-poor northern soils.',
                   ),
-                  Chip(label: Text('Norway')),
-                  Chip(label: Text('Sweden')),
-                  Chip(label: Text('Finland')),
-                  Chip(label: Text('Russia (Siberia)')),
-                  Chip(label: Text('Japan (Hokkaido)')),
+                  SizedBox(height: 12),
+                  AnimatedImageCard(
+                    index: 7,
+                    title: 'Plant Image 2: Lodgepole Pine',
+                    imageAsset: 'images/plant_lodgepole_pine.jpg',
+                    caption:
+                        'Lodgepole pine can regenerate rapidly after fire through cone adaptations.',
+                  ),
+                ],
+              ),
+            ),
+            if (wideLayout)
+              const SizedBox(width: 16)
+            else
+              const SizedBox(height: 16),
+            Expanded(
+              child: _SpeciesGroup(
+                title: 'Animals',
+                icon: Icons.pets_outlined,
+                items: animals,
+                imageCards: const [
+                  AnimatedImageCard(
+                    index: 8,
+                    title: 'Animal Image 1: Moose',
+                    imageAsset: 'images/animal_moose.jpg',
+                    caption:
+                        'Moose are large herbivores well-suited to boreal forests and wetlands.',
+                  ),
+                  SizedBox(height: 12),
+                  AnimatedImageCard(
+                    index: 9,
+                    title: 'Animal Image 2: Canada Lynx',
+                    imageAsset: 'images/animal_lynx.jpg',
+                    caption:
+                        'The Canada lynx specializes in snowy habitats and preys heavily on hares.',
+                  ),
+                ],
+              ),
+            ),
+          ];
+
+          if (wideLayout) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: sections,
+            );
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _SpeciesGroup(
+                title: 'Plants',
+                icon: Icons.eco_outlined,
+                items: plants,
+                imageCards: const [
+                  AnimatedImageCard(
+                    index: 6,
+                    title: 'Plant Image 1: Black Spruce',
+                    imageAsset: 'images/plant_black_spruce.jpg',
+                    caption:
+                        'Black spruce is highly adapted to cold, nutrient-poor northern soils.',
+                  ),
+                  SizedBox(height: 12),
+                  AnimatedImageCard(
+                    index: 7,
+                    title: 'Plant Image 2: Lodgepole Pine',
+                    imageAsset: 'images/plant_lodgepole_pine.jpg',
+                    caption:
+                        'Lodgepole pine can regenerate rapidly after fire through cone adaptations.',
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _SpeciesGroup(
+                title: 'Animals',
+                icon: Icons.pets_outlined,
+                items: animals,
+                imageCards: const [
+                  AnimatedImageCard(
+                    index: 8,
+                    title: 'Animal Image 1: Moose',
+                    imageAsset: 'images/animal_moose.jpg',
+                    caption:
+                        'Moose are large herbivores well-suited to boreal forests and wetlands.',
+                  ),
+                  SizedBox(height: 12),
+                  AnimatedImageCard(
+                    index: 9,
+                    title: 'Animal Image 2: Canada Lynx',
+                    imageAsset: 'images/animal_lynx.jpg',
+                    caption:
+                        'The Canada lynx specializes in snowy habitats and preys heavily on hares.',
+                  ),
                 ],
               ),
             ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        const AnimatedImageCard(
-          index: 2,
-          title: 'Map of Coniferous Forest Distribution',
-          imageAsset: 'images/map_taiga.png',
-          caption:
-              'Global taiga/coniferous forest zone concentrated across high northern latitudes.',
-        ),
-      ],
-    ));
+          );
+        },
+      ),
+    );
   }
 }
 
-class PlantsPage extends StatelessWidget {
-  const PlantsPage({super.key});
+class _SpeciesGroup extends StatelessWidget {
+  const _SpeciesGroup({
+    required this.title,
+    required this.icon,
+    required this.items,
+    required this.imageCards,
+  });
+
+  final String title;
+  final IconData icon;
+  final List<AdaptationItem> items;
+  final List<Widget> imageCards;
 
   @override
   Widget build(BuildContext context) {
-    return BiomePageScaffold(
-      title: 'Plants',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    final children = <Widget>[
+      Row(
         children: [
-        ...List.generate(
-          plants.length,
-          (index) => Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: AnimatedInfoCard(
-              index: index,
-              child: ListTile(
-                leading: const CircleAvatar(child: Icon(Icons.eco_outlined)),
-                title: Text(plants[index].name),
-                subtitle: Text(
-                  'Adaptation: ${plants[index].adaptation}\nHow it helps: ${plants[index].benefit}',
-                ),
+          Icon(icon),
+          const SizedBox(width: 8),
+          Text(title, style: Theme.of(context).textTheme.titleLarge),
+        ],
+      ),
+      const SizedBox(height: 12),
+      ...List.generate(
+        items.length,
+        (index) => Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: AnimatedInfoCard(
+            index: index,
+            child: ListTile(
+              leading: CircleAvatar(child: Icon(icon)),
+              title: Text(items[index].name),
+              subtitle: Text(
+                'Adaptation: ${items[index].adaptation}\nHow it helps: ${items[index].benefit}',
               ),
             ),
           ),
         ),
-        const SizedBox(height: 6),
-        const AnimatedImageCard(
-          index: 6,
-          title: 'Plant Image 1: Black Spruce',
-          imageAsset: 'images/plant_black_spruce.jpg',
-          caption:
-              'Black spruce is highly adapted to cold, nutrient-poor northern soils.',
-        ),
-        const SizedBox(height: 12),
-        const AnimatedImageCard(
-          index: 7,
-          title: 'Plant Image 2: Lodgepole Pine',
-          imageAsset: 'images/plant_lodgepole_pine.jpg',
-          caption:
-              'Lodgepole pine can regenerate rapidly after fire through cone adaptations.',
-        ),
-      ],
-    ));
-  }
-}
+      ),
+      const SizedBox(height: 6),
+      ...imageCards,
+    ];
 
-class AnimalsPage extends StatelessWidget {
-  const AnimalsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BiomePageScaffold(
-      title: 'Animals',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-        ...List.generate(
-          animals.length,
-          (index) => Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: AnimatedInfoCard(
-              index: index,
-              child: ListTile(
-                leading: const CircleAvatar(child: Icon(Icons.pets_outlined)),
-                title: Text(animals[index].name),
-                subtitle: Text(
-                  'Adaptation: ${animals[index].adaptation}\nHow it helps: ${animals[index].benefit}',
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 6),
-        const AnimatedImageCard(
-          index: 6,
-          title: 'Animal Image 1: Moose',
-          imageAsset: 'images/animal_moose.jpg',
-          caption:
-              'Moose are large herbivores well-suited to boreal forests and wetlands.',
-        ),
-        const SizedBox(height: 12),
-        const AnimatedImageCard(
-          index: 7,
-          title: 'Animal Image 2: Canada Lynx',
-          imageAsset: 'images/animal_lynx.jpg',
-          caption:
-              'The Canada lynx specializes in snowy habitats and preys heavily on hares.',
-        ),
-      ],
-    ));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    );
   }
 }
 
@@ -331,10 +406,47 @@ class ThreatsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BiomePageScaffold(
-      title: 'Threats',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      title: 'Context',
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final wideLayout = constraints.maxWidth >= 960;
+
+          final threatSection = _ThreatSection(includeImage: !wideLayout);
+          final visitSection = _VisitSection();
+
+          if (wideLayout) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: threatSection),
+                const SizedBox(width: 16),
+                Expanded(child: visitSection),
+              ],
+            );
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [threatSection, const SizedBox(height: 16), visitSection],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _ThreatSection extends StatelessWidget {
+  const _ThreatSection({required this.includeImage});
+
+  final bool includeImage;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Threats', style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: 10),
         AnimatedInfoCard(
           index: 0,
           child: Text(
@@ -375,16 +487,71 @@ class ThreatsPage extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 14),
-        const AnimatedImageCard(
-          index: 4,
-          title: 'Threat Image: Wildfire and Forest Loss',
-          imageAsset: 'images/threat_wildfire.jpg',
-          caption:
-              'Intense wildfires can transform coniferous landscapes and wildlife habitat.',
+        if (includeImage) ...[
+          const SizedBox(height: 14),
+          const AnimatedImageCard(
+            index: 4,
+            title: 'Threat Image: Wildfire and Forest Loss',
+            imageAsset: 'images/threat_wildfire.jpg',
+            caption:
+                'Intense wildfires can transform coniferous landscapes and wildlife habitat.',
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _VisitSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Why Visit', style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: 10),
+        AnimatedInfoCard(
+          index: 5,
+          child: Text(
+            'Coniferous forests offer year-round outdoor experiences, dramatic seasonal changes, and globally important ecosystems that store carbon and support biodiversity.',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+        const SizedBox(height: 10),
+        const AnimatedInfoCard(
+          index: 6,
+          child: ListTile(
+            leading: Icon(Icons.hiking),
+            title: Text('Nature experiences'),
+            subtitle: Text(
+              'Hiking, snowshoeing, birdwatching, and quiet recreation in old-growth landscapes.',
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        const AnimatedInfoCard(
+          index: 7,
+          child: ListTile(
+            leading: Icon(Icons.science),
+            title: Text('Learning and research value'),
+            subtitle: Text(
+              'A living classroom for ecology, adaptation, nutrient cycles, and climate science.',
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        const AnimatedInfoCard(
+          index: 8,
+          child: ListTile(
+            leading: Icon(Icons.forest),
+            title: Text('Scenic and cultural importance'),
+            subtitle: Text(
+              'Distinctive evergreen landscapes, northern lights in some regions, and Indigenous cultural connections.',
+            ),
+          ),
         ),
       ],
-    ));
+    );
   }
 }
 
@@ -398,48 +565,49 @@ class VisitPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        AnimatedInfoCard(
-          index: 0,
-          child: Text(
-            'Coniferous forests offer year-round outdoor experiences, dramatic seasonal changes, and globally important ecosystems that store carbon and support biodiversity.',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-        ),
-        const SizedBox(height: 12),
-        const AnimatedInfoCard(
-          index: 1,
-          child: ListTile(
-            leading: Icon(Icons.hiking),
-            title: Text('Nature experiences'),
-            subtitle: Text(
-              'Hiking, snowshoeing, birdwatching, and quiet recreation in old-growth landscapes.',
+          AnimatedInfoCard(
+            index: 0,
+            child: Text(
+              'Coniferous forests offer year-round outdoor experiences, dramatic seasonal changes, and globally important ecosystems that store carbon and support biodiversity.',
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
-        ),
-        const SizedBox(height: 10),
-        const AnimatedInfoCard(
-          index: 2,
-          child: ListTile(
-            leading: Icon(Icons.science),
-            title: Text('Learning and research value'),
-            subtitle: Text(
-              'A living classroom for ecology, adaptation, nutrient cycles, and climate science.',
+          const SizedBox(height: 12),
+          const AnimatedInfoCard(
+            index: 1,
+            child: ListTile(
+              leading: Icon(Icons.hiking),
+              title: Text('Nature experiences'),
+              subtitle: Text(
+                'Hiking, snowshoeing, birdwatching, and quiet recreation in old-growth landscapes.',
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 10),
-        const AnimatedInfoCard(
-          index: 3,
-          child: ListTile(
-            leading: Icon(Icons.forest),
-            title: Text('Scenic and cultural importance'),
-            subtitle: Text(
-              'Distinctive evergreen landscapes, northern lights in some regions, and Indigenous cultural connections.',
+          const SizedBox(height: 10),
+          const AnimatedInfoCard(
+            index: 2,
+            child: ListTile(
+              leading: Icon(Icons.science),
+              title: Text('Learning and research value'),
+              subtitle: Text(
+                'A living classroom for ecology, adaptation, nutrient cycles, and climate science.',
+              ),
             ),
           ),
-        ),
-      ],
-    ));
+          const SizedBox(height: 10),
+          const AnimatedInfoCard(
+            index: 3,
+            child: ListTile(
+              leading: Icon(Icons.forest),
+              title: Text('Scenic and cultural importance'),
+              subtitle: Text(
+                'Distinctive evergreen landscapes, northern lights in some regions, and Indigenous cultural connections.',
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -453,62 +621,63 @@ class ReferencesPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        Text(
-          'Minimum of 3 references included below. These were used for biome facts, distribution, and media credits.',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 14),
-        const AnimatedInfoCard(
-          index: 0,
-          child: ListTile(
-            leading: Icon(Icons.link),
-            title: Text('Flutter UI Docs'),
-            subtitle: Text('https://docs.flutter.dev/ui'),
+          Text(
+            'References included below. These were used for biome facts, distribution, and media credits.',
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
-        ),
-        const SizedBox(height: 10),
-        const AnimatedInfoCard(
-          index: 1,
-          child: ListTile(
-            leading: Icon(Icons.link),
-            title: Text('Flutter Material Widgets Catalog'),
-            subtitle: Text('https://docs.flutter.dev/ui/widgets/material'),
-          ),
-        ),
-        const SizedBox(height: 10),
-        const AnimatedInfoCard(
-          index: 2,
-          child: ListTile(
-            leading: Icon(Icons.link),
-            title: Text('WWF: Boreal/Coniferous Forest (Taiga) Overview'),
-            subtitle: Text(
-              'https://www.worldwildlife.org/biomes/boreal-forests-taiga',
+          const SizedBox(height: 14),
+          const AnimatedInfoCard(
+            index: 0,
+            child: ListTile(
+              leading: Icon(Icons.link),
+              title: Text('Flutter UI Docs'),
+              subtitle: Text('https://docs.flutter.dev/ui'),
             ),
           ),
-        ),
-        const SizedBox(height: 10),
-        const AnimatedInfoCard(
-          index: 3,
-          child: ListTile(
-            leading: Icon(Icons.link),
-            title: Text('National Geographic: Taiga Biome'),
-            subtitle: Text(
-              'https://education.nationalgeographic.org/resource/taiga/',
+          const SizedBox(height: 10),
+          const AnimatedInfoCard(
+            index: 1,
+            child: ListTile(
+              leading: Icon(Icons.link),
+              title: Text('Flutter Material Widgets Catalog'),
+              subtitle: Text('https://docs.flutter.dev/ui/widgets/material'),
             ),
           ),
-        ),
-        const SizedBox(height: 10),
-        const AnimatedInfoCard(
-          index: 4,
-          child: ListTile(
-            leading: Icon(Icons.photo_library_outlined),
-            title: Text('Image Sources'),
-            subtitle: Text(
-              'Image files are stored locally under assets/images for reliable loading.',
+          const SizedBox(height: 10),
+          const AnimatedInfoCard(
+            index: 2,
+            child: ListTile(
+              leading: Icon(Icons.link),
+              title: Text('WWF: Boreal/Coniferous Forest (Taiga) Overview'),
+              subtitle: Text(
+                'https://www.worldwildlife.org/biomes/boreal-forests-taiga',
+              ),
             ),
           ),
-        ),
-      ],
-    ));
+          const SizedBox(height: 10),
+          const AnimatedInfoCard(
+            index: 3,
+            child: ListTile(
+              leading: Icon(Icons.link),
+              title: Text('National Geographic: Taiga Biome'),
+              subtitle: Text(
+                'https://education.nationalgeographic.org/resource/taiga/',
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          const AnimatedInfoCard(
+            index: 4,
+            child: ListTile(
+              leading: Icon(Icons.photo_library_outlined),
+              title: Text('Image Sources'),
+              subtitle: Text(
+                'Image files are stored locally under assets/images for reliable loading.',
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
