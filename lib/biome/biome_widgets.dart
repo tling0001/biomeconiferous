@@ -25,12 +25,13 @@ class _BiomePageScaffoldState extends State<BiomePageScaffold> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
-        final horizontalPadding = width >= 1200
-            ? 32.0
-            : (width >= 700 ? 24.0 : 16.0);
-        final contentMaxWidth = width >= 1200
-            ? 1120.0
-            : (width >= 700 ? 920.0 : double.infinity);
+        final normalized = ((width - 360.0) / (2200.0 - 360.0)).clamp(0.0, 1.0);
+        // Parabolic ease-out keeps margin growth smooth and slows expansion
+        // at very wide viewport sizes (including heavy zoom-out scenarios).
+        final eased = 1.0 - (1.0 - normalized) * (1.0 - normalized);
+        final marginRatio = 0.04 + (0.05 * eased);
+        final horizontalPadding = 12.0 + (8.0 * eased);
+        final contentMaxWidth = width * (1.0 - (marginRatio * 2.0));
 
         return ScrollConfiguration(
           behavior: const _BiomeScrollBehavior(),

@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:coniferous_forest_biome/main.dart';
+import 'package:biomeconiferous/main.dart';
 
 void main() {
   testWidgets('Biome app loads title page', (WidgetTester tester) async {
