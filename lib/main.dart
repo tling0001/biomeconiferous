@@ -288,6 +288,16 @@ class _BiomeHomePageState extends State<BiomeHomePage> {
     ),
   ];
 
+  Future<void> _openSearch() async {
+    final result = await showSearch<BiomeSearchEntry?>(
+      context: context,
+      delegate: BiomeSearchDelegate(_searchEntries),
+    );
+    if (result != null && mounted) {
+      setState(() => _selectedIndex = result.pageIndex);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -315,18 +325,12 @@ class _BiomeHomePageState extends State<BiomeHomePage> {
               color: colorScheme.surface,
               child: _buildAnimatedContent(),
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final result = await showSearch<BiomeSearchEntry?>(
-            context: context,
-            delegate: BiomeSearchDelegate(_searchEntries),
-          );
-          if (result != null && mounted) {
-            setState(() => _selectedIndex = result.pageIndex);
-          }
-        },
-        child: const Icon(Icons.search),
-      ),
+      floatingActionButton: isWideLayout
+          ? null
+          : FloatingActionButton(
+              onPressed: _openSearch,
+              child: const Icon(Icons.search),
+            ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: isWideLayout ? null : _buildBottomNavigationBar(),
     );
@@ -383,6 +387,14 @@ class _BiomeHomePageState extends State<BiomeHomePage> {
       right: false,
       child: NavigationRail(
         backgroundColor: colorScheme.surface,
+        leading: Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: FloatingActionButton(
+            onPressed: _openSearch,
+            child: const Icon(Icons.search),
+          ),
+        ),
+        groupAlignment: 0,
         selectedIndex: _safeIndex,
         onDestinationSelected: (index) {
           setState(() => _selectedIndex = index);

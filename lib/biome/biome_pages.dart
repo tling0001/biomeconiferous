@@ -29,7 +29,6 @@ class TitleIntroPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
 
     return BiomePageScaffold(
       title: 'Home',
@@ -210,7 +209,7 @@ class CharacteristicsPage extends StatelessWidget {
           const AnimatedImageCard(
             index: 2,
             title: 'Map of Coniferous Forest Distribution',
-            imageAsset: 'images/map_taiga.png',
+            imageAsset: 'assets/images/map_taiga.png',
             caption:
                 'Global taiga/coniferous forest zone concentrated across high northern latitudes.',
           ),
@@ -241,7 +240,7 @@ class SpeciesPage extends StatelessWidget {
                   AnimatedImageCard(
                     index: 6,
                     title: 'Plant Image 1: Black Spruce',
-                    imageAsset: 'images/plant_black_spruce.jpg',
+                    imageAsset: 'assets/images/plant_black_spruce.jpg',
                     caption:
                         'Black spruce is highly adapted to cold, nutrient-poor northern soils.',
                   ),
@@ -249,7 +248,7 @@ class SpeciesPage extends StatelessWidget {
                   AnimatedImageCard(
                     index: 7,
                     title: 'Plant Image 2: Lodgepole Pine',
-                    imageAsset: 'images/plant_lodgepole_pine.jpg',
+                    imageAsset: 'assets/images/plant_lodgepole_pine.jpg',
                     caption:
                         'Lodgepole pine can regenerate rapidly after fire through cone adaptations.',
                   ),
@@ -269,7 +268,7 @@ class SpeciesPage extends StatelessWidget {
                   AnimatedImageCard(
                     index: 8,
                     title: 'Animal Image 1: Moose',
-                    imageAsset: 'images/animal_moose.jpg',
+                    imageAsset: 'assets/images/animal_moose.jpg',
                     caption:
                         'Moose are large herbivores well-suited to boreal forests and wetlands.',
                   ),
@@ -277,7 +276,7 @@ class SpeciesPage extends StatelessWidget {
                   AnimatedImageCard(
                     index: 9,
                     title: 'Animal Image 2: Canada Lynx',
-                    imageAsset: 'images/animal_lynx.jpg',
+                    imageAsset: 'assets/images/animal_lynx.jpg',
                     caption:
                         'The Canada lynx specializes in snowy habitats and preys heavily on hares.',
                   ),
@@ -304,7 +303,7 @@ class SpeciesPage extends StatelessWidget {
                   AnimatedImageCard(
                     index: 6,
                     title: 'Plant Image 1: Black Spruce',
-                    imageAsset: 'images/plant_black_spruce.jpg',
+                    imageAsset: 'assets/images/plant_black_spruce.jpg',
                     caption:
                         'Black spruce is highly adapted to cold, nutrient-poor northern soils.',
                   ),
@@ -312,7 +311,7 @@ class SpeciesPage extends StatelessWidget {
                   AnimatedImageCard(
                     index: 7,
                     title: 'Plant Image 2: Lodgepole Pine',
-                    imageAsset: 'images/plant_lodgepole_pine.jpg',
+                    imageAsset: 'assets/images/plant_lodgepole_pine.jpg',
                     caption:
                         'Lodgepole pine can regenerate rapidly after fire through cone adaptations.',
                   ),
@@ -327,7 +326,7 @@ class SpeciesPage extends StatelessWidget {
                   AnimatedImageCard(
                     index: 8,
                     title: 'Animal Image 1: Moose',
-                    imageAsset: 'images/animal_moose.jpg',
+                    imageAsset: 'assets/images/animal_moose.jpg',
                     caption:
                         'Moose are large herbivores well-suited to boreal forests and wetlands.',
                   ),
@@ -335,7 +334,7 @@ class SpeciesPage extends StatelessWidget {
                   AnimatedImageCard(
                     index: 9,
                     title: 'Animal Image 2: Canada Lynx',
-                    imageAsset: 'images/animal_lynx.jpg',
+                    imageAsset: 'assets/images/animal_lynx.jpg',
                     caption:
                         'The Canada lynx specializes in snowy habitats and preys heavily on hares.',
                   ),
@@ -492,7 +491,7 @@ class _ThreatSection extends StatelessWidget {
           const AnimatedImageCard(
             index: 4,
             title: 'Threat Image: Wildfire and Forest Loss',
-            imageAsset: 'images/threat_wildfire.jpg',
+            imageAsset: 'assets/images/threat_wildfire.jpg',
             caption:
                 'Intense wildfires can transform coniferous landscapes and wildlife habitat.',
           ),
