@@ -20,10 +20,21 @@ class BiomeConiferousApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF3FAF5A),
-          brightness: Brightness.light,
-        ),
+        colorScheme:
+            ColorScheme.fromSeed(
+              seedColor: const Color(0xFF2E9D4D),
+              brightness: Brightness.light,
+              dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
+            ).copyWith(
+              surface: const Color(0xFFEDF8EE),
+              surfaceContainerHighest: const Color(0xFFDDEEDD),
+              surfaceContainerHigh: const Color(0xFFE4F2E4),
+              surfaceContainer: const Color(0xFFE9F5E9),
+              secondaryContainer: const Color(0xFFCFE8D0),
+              tertiaryContainer: const Color(0xFFD6EED8),
+            ),
+        scaffoldBackgroundColor: const Color(0xFFEDF8EE),
+        canvasColor: const Color(0xFFEDF8EE),
         textTheme: Typography.material2021().black.copyWith(
           headlineLarge: const TextStyle(
             fontWeight: FontWeight.w800,
@@ -34,7 +45,7 @@ class BiomeConiferousApp extends StatelessWidget {
           bodyLarge: const TextStyle(height: 1.35),
         ),
         cardTheme: CardThemeData(
-          color: const Color(0xFFF7FFF7),
+          color: const Color(0xFFEAF6EB),
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
@@ -290,10 +301,7 @@ class _BiomeHomePageState extends State<BiomeHomePage> {
   ];
 
   Future<void> _openSearch() async {
-    final result = await showSearch<BiomeSearchEntry?>(
-      context: context,
-      delegate: BiomeSearchDelegate(_searchEntries),
-    );
+    final result = await showBiomeSearch(context, _searchEntries);
     if (result != null && mounted) {
       setState(() => _selectedIndex = result.pageIndex);
     }

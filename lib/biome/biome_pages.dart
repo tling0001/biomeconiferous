@@ -170,7 +170,7 @@ class CharacteristicsPage extends StatelessWidget {
                   'Glacial lakes, peatlands, stream channels, seasonal ice cover',
                 ),
                 ComparisonRow(
-                  'Zonation / Seasons',
+                  'Seasons',
                   'Distinct canopy-understory-floor layers; clear seasons',
                   'Shoreline (littoral), open water (limnetic), deep water (profundal); seasons affect ice, flow, and oxygen',
                 ),
@@ -669,9 +669,20 @@ class ReferencesPage extends StatelessWidget {
             index: 4,
             child: ListTile(
               leading: Icon(Icons.photo_library_outlined),
-              title: Text('Image Credits'),
+              title: Text('Image Credits (Sourced)'),
               subtitle: Text(
                 'Home hero: Wikimedia Commons (File:Siberian autumn in taiga..JPG, CC BY-SA 3.0).\nLodgepole pine: Wikimedia Commons (File:Pinus contorta 28289.JPG, CC BY-SA 3.0).\nTaiga map: Wikimedia Commons (File:Taiga ecoregion.png, CC BY-SA 3.0).',
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          const AnimatedInfoCard(
+            index: 5,
+            child: ListTile(
+              leading: Icon(Icons.info_outline),
+              title: Text('Image Credits (Project Media Bundle)'),
+              subtitle: Text(
+                'The following bundled image files are used in this app and currently have no source metadata recorded in this repository:\nassets/images/plant_black_spruce.jpg\nassets/images/animal_moose.jpg\nassets/images/animal_lynx.jpg\nassets/images/threat_wildfire.jpg',
               ),
             ),
           ),

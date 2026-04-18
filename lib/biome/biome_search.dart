@@ -16,87 +16,137 @@ class BiomeSearchEntry {
   final List<String> keywords;
 }
 
-class BiomeSearchDelegate extends SearchDelegate<BiomeSearchEntry?> {
-  BiomeSearchDelegate(this.entries)
-    : super(
-        searchFieldLabel: 'Search plants, animals, threats, and references',
-        searchFieldStyle: const TextStyle(fontWeight: FontWeight.w600),
-        textInputAction: TextInputAction.search,
-        autocorrect: false,
-        enableSuggestions: true,
-      );
+Future<BiomeSearchEntry?> showBiomeSearch(
+  BuildContext context,
+  List<BiomeSearchEntry> entries,
+) {
+  return Navigator.of(context).push<BiomeSearchEntry?>(
+    PageRouteBuilder<BiomeSearchEntry?>(
+      transitionDuration: const Duration(milliseconds: 280),
+      reverseTransitionDuration: const Duration(milliseconds: 280),
+      pageBuilder: (_, _, _) => BiomeSearchPage(entries: entries),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+          reverseCurve: Curves.easeInCubic,
+        );
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(1, 0),
+            end: Offset.zero,
+          ).animate(curved),
+          child: child,
+        );
+      },
+    ),
+  );
+}
+
+class BiomeSearchPage extends StatefulWidget {
+  const BiomeSearchPage({required this.entries, super.key});
 
   final List<BiomeSearchEntry> entries;
 
   @override
-  ThemeData appBarTheme(BuildContext context) {
+  State<BiomeSearchPage> createState() => _BiomeSearchPageState();
+}
+
+class _BiomeSearchPageState extends State<BiomeSearchPage> {
+  late final TextEditingController _controller;
+  late final FocusNode _focusNode;
+  String _query = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+    _focusNode = FocusNode();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _focusNode.requestFocus();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
-    return theme.copyWith(
-      appBarTheme: theme.appBarTheme.copyWith(
+    return Scaffold(
+      appBar: AppBar(
         backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
         shadowColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
-      ),
-      inputDecorationTheme: theme.inputDecorationTheme.copyWith(
-        filled: true,
-        fillColor: colorScheme.surfaceContainerHighest,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
-          borderSide: BorderSide.none,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
-          borderSide: BorderSide(color: colorScheme.primary, width: 1.4),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 14,
-        ),
-      ),
-    );
-  }
-
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [
-      if (query.isNotEmpty)
-        IconButton(
-          icon: const Icon(Icons.clear),
-          onPressed: () {
-            query = '';
+        title: TextField(
+          controller: _controller,
+          focusNode: _focusNode,
+          textInputAction: TextInputAction.search,
+          autocorrect: false,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+          decoration: InputDecoration(
+            hintText: 'Search plants, animals, threats, and references',
+            filled: true,
+            fillColor: colorScheme.surfaceContainerHighest,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(24),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(24),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(24),
+              borderSide: BorderSide(color: colorScheme.primary, width: 1.4),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
+          ),
+          onChanged: (value) {
+            setState(() {
+              _query = value;
+            });
           },
         ),
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () => close(context, null),
+        actions: [
+          if (_query.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: () {
+                _controller.clear();
+                setState(() {
+                  _query = '';
+                });
+              },
+            ),
+        ],
+      ),
+      body: _buildMatches(context),
     );
   }
-
-  @override
-  Widget buildResults(BuildContext context) => _buildMatches(context);
-
-  @override
-  Widget buildSuggestions(BuildContext context) => _buildMatches(context);
 
   Widget _buildMatches(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final normalizedQuery = query.trim().toLowerCase();
+    final normalizedQuery = _query.trim().toLowerCase();
     final matches = normalizedQuery.isEmpty
-        ? entries
-        : entries.where((entry) {
+        ? widget.entries
+        : widget.entries.where((entry) {
             final searchable = <String>[
               entry.title,
               entry.category,
@@ -158,7 +208,7 @@ class BiomeSearchDelegate extends SearchDelegate<BiomeSearchEntry?> {
                 Text(
                   normalizedQuery.isEmpty
                       ? 'Search the biome'
-                      : 'Results for "$query"',
+                      : 'Results for "$_query"',
                   style: theme.textTheme.titleLarge,
                 ),
                 const SizedBox(height: 8),
@@ -201,7 +251,7 @@ class BiomeSearchDelegate extends SearchDelegate<BiomeSearchEntry?> {
                 subtitle: Text('${entry.category}\n${entry.description}'),
                 isThreeLine: true,
                 trailing: const Icon(Icons.chevron_right),
-                onTap: () => close(context, entry),
+                onTap: () => Navigator.of(context).pop(entry),
               ),
             ),
           ),

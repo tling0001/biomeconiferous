@@ -230,7 +230,11 @@ class ComparisonTable extends StatelessWidget {
           child: Column(
             children: [
               const TableHeader(
-                cells: ['Category', 'Terrestrial Biome', 'Aquatic Biome'],
+                cells: [
+                  'Category',
+                  'Main Terrestrial Biome',
+                  'Aquatic Biome Parts',
+                ],
               ),
               ...rows.map(
                 (row) => TableRowContent(
