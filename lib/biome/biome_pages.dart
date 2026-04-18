@@ -43,7 +43,7 @@ class TitleIntroPage extends StatelessWidget {
                   height: 280,
                   width: double.infinity,
                   child: Image.asset(
-                    'images/hero_forest.jpg',
+                    'assets/images/hero_forest.jpg',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
@@ -669,9 +669,9 @@ class ReferencesPage extends StatelessWidget {
             index: 4,
             child: ListTile(
               leading: Icon(Icons.photo_library_outlined),
-              title: Text('Image Sources'),
+              title: Text('Image Credits'),
               subtitle: Text(
-                'Image files are stored locally under assets/images for reliable loading.',
+                'Home hero: Wikimedia Commons (File:Siberian autumn in taiga..JPG, CC BY-SA 3.0).\nLodgepole pine: Wikimedia Commons (File:Pinus contorta 28289.JPG, CC BY-SA 3.0).\nTaiga map: Wikimedia Commons (File:Taiga ecoregion.png, CC BY-SA 3.0).',
               ),
             ),
           ),

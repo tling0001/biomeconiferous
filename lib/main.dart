@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'biome/biome_data.dart';
 import 'biome/biome_pages.dart';
 import 'biome/biome_search.dart';
+import 'pwa_mode.dart';
 
 void main() {
   runApp(const BiomeConiferousApp());
@@ -20,7 +21,7 @@ class BiomeConiferousApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1F8A43),
+          seedColor: const Color(0xFF3FAF5A),
           brightness: Brightness.light,
         ),
         textTheme: Typography.material2021().black.copyWith(
@@ -302,6 +303,12 @@ class _BiomeHomePageState extends State<BiomeHomePage> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final isWideLayout = MediaQuery.sizeOf(context).width >= _railBreakpoint;
+    final flutterBottomSafeInset = MediaQuery.viewPaddingOf(context).bottom;
+    final measuredWebSafeInset = pwaBottomSafeInsetPx;
+    final bottomSafeInset = measuredWebSafeInset > flutterBottomSafeInset
+        ? measuredWebSafeInset
+        : flutterBottomSafeInset;
+    final applyPwaSafeInset = isPwaLaunchMode && bottomSafeInset > 0;
 
     return Scaffold(
       body: isWideLayout
@@ -332,7 +339,12 @@ class _BiomeHomePageState extends State<BiomeHomePage> {
               child: const Icon(Icons.search),
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      bottomNavigationBar: isWideLayout ? null : _buildBottomNavigationBar(),
+      bottomNavigationBar: isWideLayout
+          ? null
+          : _buildBottomNavigationBar(
+              applyBottomSafeInset: applyPwaSafeInset,
+              bottomSafeInset: bottomSafeInset,
+            ),
     );
   }
 
@@ -363,8 +375,11 @@ class _BiomeHomePageState extends State<BiomeHomePage> {
     );
   }
 
-  Widget _buildBottomNavigationBar() {
-    return NavigationBar(
+  Widget _buildBottomNavigationBar({
+    required bool applyBottomSafeInset,
+    required double bottomSafeInset,
+  }) {
+    final navBar = NavigationBar(
       selectedIndex: _safeIndex,
       onDestinationSelected: (index) {
         setState(() => _selectedIndex = index);
@@ -378,6 +393,15 @@ class _BiomeHomePageState extends State<BiomeHomePage> {
           label: meta.title,
         );
       }),
+    );
+
+    if (!applyBottomSafeInset) {
+      return navBar;
+    }
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomSafeInset),
+      child: navBar,
     );
   }
 

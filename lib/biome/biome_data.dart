@@ -4,7 +4,7 @@ import 'biome_models.dart';
 
 const List<PageMeta> biomePageMeta = [
   PageMeta('Home', Icons.forest),
-  PageMeta('Characteristics', Icons.thermostat),
+  PageMeta('Traits', Icons.thermostat),
   PageMeta('Species', Icons.nature),
   PageMeta('Context', Icons.warning_amber),
   PageMeta('References', Icons.menu_book),

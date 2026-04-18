@@ -19,10 +19,16 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#e7f3ec">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#101813">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="CF Biome">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
@@ -31,8 +37,183 @@
 
   <title>biomeconiferous</title>
   <link rel="manifest" href="manifest.json">
+  <script>
+    (function () {
+      const measureSafeAreaBottom = () => {
+        const probe = document.createElement('div');
+        probe.style.position = 'fixed';
+        probe.style.left = '0';
+        probe.style.bottom = '0';
+        probe.style.width = '0';
+        probe.style.height = '0';
+        probe.style.paddingBottom = 'env(safe-area-inset-bottom, 0px)';
+        probe.style.visibility = 'hidden';
+        document.documentElement.appendChild(probe);
+        const envPx = parseFloat(window.getComputedStyle(probe).paddingBottom) || 0;
+
+        probe.style.paddingBottom = 'constant(safe-area-inset-bottom)';
+        const constantPx = parseFloat(window.getComputedStyle(probe).paddingBottom) || 0;
+
+        const px = Math.max(envPx, constantPx);
+        probe.remove();
+        return px;
+      };
+
+      const persistSafeAreaBottom = () => {
+        try {
+          const safeBottom = measureSafeAreaBottom();
+          window.sessionStorage.setItem('cfSafeAreaBottomPx', String(safeBottom));
+        } catch (_) {
+          // Ignore storage restrictions and continue gracefully.
+        }
+      };
+
+      const isStandaloneMode =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.matchMedia('(display-mode: fullscreen)').matches ||
+        window.matchMedia('(display-mode: minimal-ui)').matches;
+      const isiOSHomeScreen = window.navigator.standalone === true;
+      const isPwaLaunch = isStandaloneMode || isiOSHomeScreen;
+
+      if (isPwaLaunch) {
+        document.documentElement.classList.add('pwa-launch');
+      }
+
+      try {
+        if (isPwaLaunch) {
+          window.sessionStorage.setItem('cfPwaLaunchMode', '1');
+        } else {
+          window.sessionStorage.removeItem('cfPwaLaunchMode');
+          window.sessionStorage.removeItem('cfSafeAreaBottomPx');
+        }
+      } catch (_) {
+        // Ignore storage restrictions and continue gracefully.
+      }
+
+      if (isPwaLaunch) {
+        const runSafeAreaMeasurement = () => {
+          persistSafeAreaBottom();
+          window.requestAnimationFrame(persistSafeAreaBottom);
+        };
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', runSafeAreaMeasurement, {
+            once: true,
+          });
+        } else {
+          runSafeAreaMeasurement();
+        }
+      }
+
+      window.addEventListener('resize', () => {
+        if (!isPwaLaunch) {
+          return;
+        }
+        persistSafeAreaBottom();
+      });
+    })();
+  </script>
+  <style>
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: #e7f3ec;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      html,
+      body {
+        background: #101813;
+      }
+    }
+
+    #app-splash {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 25%, #f3fbf6 0%, #dcefe4 55%, #cfe7d9 100%);
+      transition: opacity 220ms ease;
+    }
+
+    .pwa-launch #app-splash {
+      display: flex;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      #app-splash {
+        background: radial-gradient(circle at 50% 25%, #1d2a22 0%, #16211b 55%, #101813 100%);
+      }
+    }
+
+    #app-splash.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .splash-shell {
+      width: min(86vw, 420px);
+      min-height: min(72vh, 520px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 28px 24px calc(18px + env(safe-area-inset-bottom));
+      box-sizing: border-box;
+    }
+
+    .splash-icon {
+      width: clamp(112px, 21vw, 156px);
+      height: clamp(112px, 21vw, 156px);
+      border-radius: 28px;
+      object-fit: cover;
+      box-shadow: 0 18px 40px rgba(20, 54, 35, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    .splash-title {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: calc(22px + env(safe-area-inset-bottom));
+      margin: 0;
+      text-align: center;
+      font: 600 clamp(18px, 2.2vw, 24px) / 1.25 "Segoe UI", "Avenir Next", "Helvetica Neue", sans-serif;
+      letter-spacing: 0.02em;
+      color: #1c4b31;
+      text-wrap: balance;
+      padding: 0 8px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .splash-title {
+        color: #d6eada;
+      }
+
+      .splash-icon {
+        border-color: rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.12);
+      }
+    }
+  </style>
 </head>
 <body>
+  <div id="app-splash" role="status" aria-live="polite">
+    <div class="splash-shell">
+      <img
+        class="splash-icon"
+        src="icons/coniferous_forest_biome_icon_source.png"
+        alt="Coniferous Forest Biome"
+      >
+      <p class="splash-title">Coniferous Forest Biome</p>
+    </div>
+  </div>
   <!--
     You can customize the "flutter_bootstrap.js" script.
     This is useful to provide a custom configuration to the Flutter loader
@@ -42,5 +223,33 @@
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
   <script src="flutter_bootstrap.js" async></script>
+  <script>
+    (function () {
+      const splash = document.getElementById('app-splash');
+      if (!splash) return;
+      if (!document.documentElement.classList.contains('pwa-launch')) {
+        splash.remove();
+        return;
+      }
+
+      const hideSplash = () => {
+        splash.classList.add('hidden');
+        window.setTimeout(() => splash.remove(), 260);
+      };
+
+      const maxWaitMs = 8000;
+      const start = Date.now();
+      const timer = window.setInterval(() => {
+        const flutterReady =
+          document.querySelector('flt-glass-pane') ||
+          document.querySelector('flutter-view');
+
+        if (flutterReady || Date.now() - start > maxWaitMs) {
+          window.clearInterval(timer);
+          hideSplash();
+        }
+      }, 80);
+    })();
+  </script>
 </body>
 </html>
