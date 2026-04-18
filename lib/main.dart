@@ -16,7 +16,7 @@ class BiomeConiferousApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Coniferous Forest Biome',
+      title: 'Taiga Biome',
       themeMode: ThemeMode.system,
       theme: ThemeData(
         useMaterial3: true,
@@ -26,15 +26,26 @@ class BiomeConiferousApp extends StatelessWidget {
               brightness: Brightness.light,
               dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
             ).copyWith(
-              surface: const Color(0xFFEDF8EE),
-              surfaceContainerHighest: const Color(0xFFDDEEDD),
-              surfaceContainerHigh: const Color(0xFFE4F2E4),
-              surfaceContainer: const Color(0xFFE9F5E9),
-              secondaryContainer: const Color(0xFFCFE8D0),
-              tertiaryContainer: const Color(0xFFD6EED8),
+              surface: const Color(0xFFF5FBF5),
+              surfaceContainerLowest: const Color(0xFFF5FBF5),
+              surfaceContainerLow: const Color(0xFFEFF7EF),
+              surfaceContainer: const Color(0xFFE6F1E6),
+              surfaceContainerHigh: const Color(0xFFDCE9DD),
+              surfaceContainerHighest: const Color(0xFFD0E0D1),
+              secondaryContainer: const Color(0xFFC2D9C3),
+              tertiaryContainer: const Color(0xFFC9E0CB),
             ),
-        scaffoldBackgroundColor: const Color(0xFFEDF8EE),
-        canvasColor: const Color(0xFFEDF8EE),
+        scaffoldBackgroundColor: const Color(0xFFF5FBF5),
+        canvasColor: const Color(0xFFF5FBF5),
+        navigationBarTheme: NavigationBarThemeData(
+          backgroundColor: const Color(0xFFDCE9DD),
+          indicatorColor: const Color(0xFFC2D9C3),
+        ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Color(0xFFEEF8F0),
+          foregroundColor: Color(0xFF1C4E2C),
+          elevation: 3,
+        ),
         textTheme: Typography.material2021().black.copyWith(
           headlineLarge: const TextStyle(
             fontWeight: FontWeight.w800,
@@ -45,7 +56,7 @@ class BiomeConiferousApp extends StatelessWidget {
           bodyLarge: const TextStyle(height: 1.35),
         ),
         cardTheme: CardThemeData(
-          color: const Color(0xFFEAF6EB),
+          color: const Color(0xFFE6F1E6),
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
@@ -59,6 +70,14 @@ class BiomeConiferousApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
         scaffoldBackgroundColor: const Color(0xFF101813),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Color(0xFF244030),
+          foregroundColor: Color(0xFFE8FFEC),
+          elevation: 6,
+          focusElevation: 8,
+          hoverElevation: 8,
+          highlightElevation: 10,
+        ),
         textTheme: Typography.material2021().white.copyWith(
           headlineLarge: const TextStyle(
             fontWeight: FontWeight.w800,
@@ -418,7 +437,7 @@ class _BiomeHomePageState extends State<BiomeHomePage> {
     return SafeArea(
       right: false,
       child: NavigationRail(
-        backgroundColor: colorScheme.surface,
+        backgroundColor: colorScheme.surfaceContainerHigh,
         leading: Padding(
           padding: const EdgeInsets.only(top: 8),
           child: FloatingActionButton(

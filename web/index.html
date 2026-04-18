@@ -29,13 +29,13 @@
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="CF Biome">
+  <meta name="apple-mobile-web-app-title" content="Taiga Biome">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>biomeconiferous</title>
+  <title>Taiga Biome</title>
   <link rel="manifest" href="manifest.json">
   <script>
     (function () {
@@ -162,6 +162,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 16px;
       position: relative;
       padding: 28px 24px calc(18px + env(safe-area-inset-bottom));
       box-sizing: border-box;
@@ -178,10 +179,6 @@
     }
 
     .splash-title {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: calc(22px + env(safe-area-inset-bottom));
       margin: 0;
       text-align: center;
       font: 600 clamp(18px, 2.2vw, 24px) / 1.25 "Segoe UI", "Avenir Next", "Helvetica Neue", sans-serif;
@@ -191,9 +188,66 @@
       padding: 0 8px;
     }
 
+    .splash-spinner {
+      width: 32px;
+      height: 32px;
+      opacity: 0;
+      transform: scale(0.92);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .splash-spinner.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .splash-spinner-svg {
+      width: 100%;
+      height: 100%;
+      transform-origin: center;
+      animation: m3-spin-rotate 1.9s linear infinite;
+    }
+
+    .splash-spinner-circle {
+      fill: none;
+      stroke: #1c4b31;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 1, 120;
+      stroke-dashoffset: 0;
+      animation: m3-spin-dash 1.4s ease-in-out infinite;
+    }
+
+    @keyframes m3-spin-rotate {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes m3-spin-dash {
+      0% {
+        stroke-dasharray: 1, 120;
+        stroke-dashoffset: 0;
+      }
+
+      50% {
+        stroke-dasharray: 76, 120;
+        stroke-dashoffset: -20;
+      }
+
+      100% {
+        stroke-dasharray: 76, 120;
+        stroke-dashoffset: -96;
+      }
+    }
+
     @media (prefers-color-scheme: dark) {
       .splash-title {
         color: #d6eada;
+      }
+
+      .splash-spinner-circle {
+        stroke: #d6eada;
       }
 
       .splash-icon {
@@ -209,9 +263,14 @@
       <img
         class="splash-icon"
         src="icons/coniferous_forest_biome_icon_source.png"
-        alt="Coniferous Forest Biome"
+        alt="Taiga Biome"
       >
-      <p class="splash-title">Coniferous Forest Biome</p>
+      <div class="splash-spinner" id="splash-spinner" aria-hidden="true">
+        <svg class="splash-spinner-svg" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+          <circle class="splash-spinner-circle" cx="24" cy="24" r="18"></circle>
+        </svg>
+      </div>
+      <p class="splash-title">Taiga Biome</p>
     </div>
   </div>
   <!--
@@ -226,15 +285,48 @@
   <script>
     (function () {
       const splash = document.getElementById('app-splash');
+      const spinner = document.getElementById('splash-spinner');
       if (!splash) return;
       if (!document.documentElement.classList.contains('pwa-launch')) {
         splash.remove();
         return;
       }
 
+      const spinnerDelayMs = 300;
+      const spinnerMinVisibleMs = 700;
+      let spinnerVisible = false;
+      let spinnerShownAtMs = 0;
+      let finished = false;
+
       const hideSplash = () => {
         splash.classList.add('hidden');
         window.setTimeout(() => splash.remove(), 260);
+      };
+
+      const spinnerDelayTimer = window.setTimeout(() => {
+        if (!spinner || finished) {
+          return;
+        }
+        spinner.classList.add('visible');
+        spinnerVisible = true;
+        spinnerShownAtMs = Date.now();
+      }, spinnerDelayMs);
+
+      const completeSplash = () => {
+        if (finished) {
+          return;
+        }
+        finished = true;
+        window.clearTimeout(spinnerDelayTimer);
+
+        if (!spinnerVisible) {
+          hideSplash();
+          return;
+        }
+
+        const elapsed = Date.now() - spinnerShownAtMs;
+        const remaining = Math.max(0, spinnerMinVisibleMs - elapsed);
+        window.setTimeout(hideSplash, remaining);
       };
 
       const maxWaitMs = 8000;
@@ -246,7 +338,7 @@
 
         if (flutterReady || Date.now() - start > maxWaitMs) {
           window.clearInterval(timer);
-          hideSplash();
+          completeSplash();
         }
       }, 80);
     })();

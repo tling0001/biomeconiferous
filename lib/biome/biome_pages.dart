@@ -75,7 +75,7 @@ class TitleIntroPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Coniferous Forest Biome',
+                        'Coniferous Forest/Taiga Biome',
                         style: textTheme.headlineLarge?.copyWith(
                           color: const Color.fromRGBO(255, 255, 255, 1),
                           fontWeight: FontWeight.w700,
@@ -98,7 +98,7 @@ class TitleIntroPage extends StatelessWidget {
           AnimatedInfoCard(
             index: 0,
             child: Text(
-              'Coniferous forests are dominated by cone-bearing evergreen trees such as spruce, fir, pine, and hemlock. They form one of Earth\'s largest terrestrial biomes and are strongly tied to nearby freshwater systems like cold streams, peatlands, and snow-fed lakes.',
+              'Coniferous forests are dominated by cone-bearing evergreen trees such as spruce, fir, pine, and hemlock. They form Earth\'s largest terrestrial biomes and are strongly tied to nearby freshwater systems like cold streams, peatlands, and snow-fed lakes.',
               style: textTheme.bodyLarge,
             ),
           ),
@@ -141,7 +141,7 @@ class CharacteristicsPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Coniferous forests are usually cool to cold, with long winters, short growing seasons, and moderate precipitation that often falls as snow. Nearby aquatic systems are commonly cold, oxygen-rich, and strongly seasonal due to spring snowmelt.',
+            'Coniferous forests are usually pretty cold, with long winters, short growing seasons, and moderate precipitation that often falls as snow. Nearby aquatic systems are commonly cold, oxygen-rich, and strongly seasonal due to snow melting in the spring.',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 16),
@@ -161,7 +161,7 @@ class CharacteristicsPage extends StatelessWidget {
                 ),
                 ComparisonRow(
                   'Temperature',
-                  'Average annual about -5 C to 10 C',
+                  'Average annually about -5 C to 10 C',
                   'Water often near 0-15 C depending on season and depth',
                 ),
                 ComparisonRow(
