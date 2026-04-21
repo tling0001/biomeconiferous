@@ -171,8 +171,8 @@ class CharacteristicsPage extends StatelessWidget {
                 ),
                 ComparisonRow(
                   'Seasons',
-                  'Distinct canopy-understory-floor layers; clear seasons',
-                  'Shoreline (littoral), open water (limnetic), deep water (profundal); seasons affect ice, flow, and oxygen',
+                  'Long, cold winters and short, cool summers with a brief growing season',
+                  'Strong seasonal cycles: winter ice cover, spring snowmelt pulses, summer warming, and autumn turnover',
                 ),
               ],
             ),
@@ -208,7 +208,7 @@ class CharacteristicsPage extends StatelessWidget {
           const SizedBox(height: 16),
           const AnimatedImageCard(
             index: 2,
-            title: 'Map of Coniferous Forest Distribution',
+            title: 'Map of Coniferous Forest/Taiga Distribution',
             imageAsset: 'assets/images/map_taiga.png',
             caption:
                 'Global taiga/coniferous forest zone concentrated across high northern latitudes.',
@@ -449,7 +449,7 @@ class _ThreatSection extends StatelessWidget {
         AnimatedInfoCard(
           index: 0,
           child: Text(
-            'Coniferous forests face increasing pressure from resource extraction, climate change, and fragmentation. These drivers can alter species composition, increase fire severity, and reduce long-term carbon storage.',
+            'Coniferous forests face increasing pressure from resource extraction (logging), climate change, and fragmentation. These changes can alter species composition, increase fire severity, and reduce long-term carbon storage.',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
         ),
@@ -460,7 +460,7 @@ class _ThreatSection extends StatelessWidget {
             leading: Icon(Icons.content_cut),
             title: Text('Deforestation and logging roads'),
             subtitle: Text(
-              'Causes: timber demand and road expansion. Effects: habitat loss, edge effects, and easier predator access into previously intact areas.',
+              'Causes: timber chopping and road expansion. Effects: habitat loss, edge effects, and easier predator access into previously intact areas.',
             ),
           ),
         ),
@@ -471,7 +471,7 @@ class _ThreatSection extends StatelessWidget {
             leading: Icon(Icons.local_fire_department),
             title: Text('Climate-driven fire regime changes'),
             subtitle: Text(
-              'Causes: warming temperatures and drought stress. Effects: larger, hotter fires that can slow natural regeneration in some zones.',
+              'Causes: warming temperatures and drought stress. Effects: larger, hotter fires that can slow natural regrowth in some zones.',
             ),
           ),
         ),
@@ -523,7 +523,7 @@ class _VisitSection extends StatelessWidget {
             leading: Icon(Icons.hiking),
             title: Text('Nature experiences'),
             subtitle: Text(
-              'Hiking, snowshoeing, birdwatching, and quiet recreation in old-growth landscapes.',
+              'Hiking, snowshoeing, birdwatching, and quiet relaxing in old-growth landscapes.',
             ),
           ),
         ),
@@ -534,7 +534,7 @@ class _VisitSection extends StatelessWidget {
             leading: Icon(Icons.science),
             title: Text('Learning and research value'),
             subtitle: Text(
-              'A living classroom for ecology, adaptation, nutrient cycles, and climate science.',
+              'Lots of education stuff for ecology, adaptation, nutrient cycles, and climate science.',
             ),
           ),
         ),
@@ -680,9 +680,9 @@ class ReferencesPage extends StatelessWidget {
             index: 5,
             child: ListTile(
               leading: Icon(Icons.info_outline),
-              title: Text('Image Credits (Project Media Bundle)'),
+              title: Text('Image Credits (Additional Sourced Media)'),
               subtitle: Text(
-                'The following bundled image files are used in this app and currently have no source metadata recorded in this repository:\nassets/images/plant_black_spruce.jpg\nassets/images/animal_moose.jpg\nassets/images/animal_lynx.jpg\nassets/images/threat_wildfire.jpg',
+                'Black spruce: Wikimedia Commons (File:Black spruce stand at Arctic Chalet, Inuvik, NT.jpg, CC BY-SA 3.0).\nMoose: Wikimedia Commons (File:Alce (Alces alces), Parque nacional y reserva Denali, Alaska, Estados Unidos, 2017-08-30, DD 52.jpg, CC BY-SA 4.0).\nCanada lynx: Wikimedia Commons (File:Canada lynx by Michael Zahra.jpg, CC BY-SA 3.0).\nWildfire: Wikimedia Commons (File:Lick Fire on the Umatilla National Forest burning at night.jpg, Public domain).',
               ),
             ),
           ),
