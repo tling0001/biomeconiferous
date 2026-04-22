@@ -257,7 +257,7 @@ class SpeciesPage extends StatelessWidget {
                     title: 'Plants',
                     icon: Icons.eco_outlined,
                     items: plants,
-                    images: _plantSpeciesImages,
+                    imagesByName: _plantSpeciesImagesByName,
                     animationBaseIndex: 6,
                   ),
                 ),
@@ -267,7 +267,7 @@ class SpeciesPage extends StatelessWidget {
                     title: 'Animals',
                     icon: Icons.pets_outlined,
                     items: animals,
-                    images: _animalSpeciesImages,
+                    imagesByName: _animalSpeciesImagesByName,
                     animationBaseIndex: 18,
                   ),
                 ),
@@ -282,7 +282,7 @@ class SpeciesPage extends StatelessWidget {
                 title: 'Plants',
                 icon: Icons.eco_outlined,
                 items: plants,
-                images: _plantSpeciesImages,
+                imagesByName: _plantSpeciesImagesByName,
                 animationBaseIndex: 6,
               ),
               SizedBox(height: 16),
@@ -290,7 +290,7 @@ class SpeciesPage extends StatelessWidget {
                 title: 'Animals',
                 icon: Icons.pets_outlined,
                 items: animals,
-                images: _animalSpeciesImages,
+                imagesByName: _animalSpeciesImagesByName,
                 animationBaseIndex: 18,
               ),
             ],
@@ -313,87 +313,53 @@ class _SpeciesImageData {
   final String caption;
 }
 
-const List<_SpeciesImageData> _plantSpeciesImages = [
-  _SpeciesImageData(
+const Map<String, _SpeciesImageData> _plantSpeciesImagesByName = {
+  'Black Spruce (Picea mariana)': _SpeciesImageData(
     title: 'Plant Image: Black Spruce',
     imageAsset: 'assets/images/plant_black_spruce.jpg',
     caption:
         'Black spruce is highly adapted to cold, nutrient-poor northern soils.',
   ),
-  _SpeciesImageData(
+  'Lodgepole Pine (Pinus contorta)': _SpeciesImageData(
     title: 'Plant Image: Lodgepole Pine',
     imageAsset: 'assets/images/plant_lodgepole_pine.jpg',
     caption:
         'Lodgepole pine can regenerate rapidly after fire through cone adaptations.',
   ),
-  _SpeciesImageData(
-    title: 'Plant Image: Balsam Fir',
-    imageAsset: 'assets/images/plant_balsam_fir.jpg',
-    caption: 'Balsam fir needles stay active through short growing seasons.',
-  ),
-  _SpeciesImageData(
-    title: 'Plant Image: Bearberry',
-    imageAsset: 'assets/images/plant_bearberry.jpg',
-    caption:
-        'Bearberry grows close to the ground to avoid wind stress and cold.',
-  ),
-  _SpeciesImageData(
-    title: 'Plant Image: Sphagnum Moss',
-    imageAsset: 'assets/images/plant_sphagnum_moss.jpg',
-    caption:
-        'Sphagnum moss stores water and supports acidic peatland conditions.',
-  ),
-];
+};
 
-const List<_SpeciesImageData> _animalSpeciesImages = [
-  _SpeciesImageData(
+const Map<String, _SpeciesImageData> _animalSpeciesImagesByName = {
+  'Moose': _SpeciesImageData(
     title: 'Animal Image: Moose',
     imageAsset: 'assets/images/animal_moose.jpg',
     caption:
         'Moose are large herbivores well-suited to boreal forests and wetlands.',
   ),
-  _SpeciesImageData(
-    title: 'Animal Image: Gray Wolf',
-    imageAsset: 'assets/images/animal_gray_wolf.jpg',
-    caption: 'Gray wolves combine social hunting with cold-climate endurance.',
-  ),
-  _SpeciesImageData(
+  'Canada Lynx': _SpeciesImageData(
     title: 'Animal Image: Canada Lynx',
     imageAsset: 'assets/images/animal_lynx.jpg',
     caption:
         'The Canada lynx specializes in snowy habitats and preys heavily on hares.',
   ),
-  _SpeciesImageData(
-    title: 'Animal Image: Snowshoe Hare',
-    imageAsset: 'assets/images/animal_snowshoe_hare.jpg',
-    caption: 'Snowshoe hares use seasonal camouflage to reduce predation risk.',
-  ),
-  _SpeciesImageData(
-    title: 'Animal Image: Boreal Owl',
-    imageAsset: 'assets/images/animal_boreal_owl.jpg',
-    caption: 'Boreal owls hunt in low light with excellent hearing and vision.',
-  ),
-];
+};
 
 class _SpeciesGroup extends StatelessWidget {
   const _SpeciesGroup({
     required this.title,
     required this.icon,
     required this.items,
-    required this.images,
+    required this.imagesByName,
     required this.animationBaseIndex,
   });
 
   final String title;
   final IconData icon;
   final List<AdaptationItem> items;
-  final List<_SpeciesImageData> images;
+  final Map<String, _SpeciesImageData> imagesByName;
   final int animationBaseIndex;
 
   @override
   Widget build(BuildContext context) {
-    assert(items.length == images.length);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -407,7 +373,7 @@ class _SpeciesGroup extends StatelessWidget {
         const SizedBox(height: 12),
         ...List.generate(items.length, (index) {
           final entry = items[index];
-          final image = images[index];
+          final image = imagesByName[entry.name];
           final imageAnimationIndex = animationBaseIndex + (index * 2);
           final infoAnimationIndex = imageAnimationIndex + 1;
 
@@ -416,13 +382,15 @@ class _SpeciesGroup extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                AnimatedImageCard(
-                  index: imageAnimationIndex,
-                  title: image.title,
-                  imageAsset: image.imageAsset,
-                  caption: image.caption,
-                ),
-                const SizedBox(height: 8),
+                if (image != null) ...[
+                  AnimatedImageCard(
+                    index: imageAnimationIndex,
+                    title: image.title,
+                    imageAsset: image.imageAsset,
+                    caption: image.caption,
+                  ),
+                  const SizedBox(height: 8),
+                ],
                 AnimatedInfoCard(
                   index: infoAnimationIndex,
                   child: ListTile(
@@ -747,7 +715,7 @@ class ReferencesPage extends StatelessWidget {
               leading: Icon(Icons.park_outlined),
               title: Text('Plant Image Credits'),
               subtitle: Text(
-                'Black spruce: Wikimedia Commons (File:Black spruce stand at Arctic Chalet, Inuvik, NT.jpg, CC BY-SA 3.0).\nLodgepole pine: Wikimedia Commons (File:Pinus contorta 28289.JPG, CC BY-SA 3.0).\nBalsam fir: Wikimedia Commons (File:Abies balsamea.jpg, Public domain).\nBearberry: Wikimedia Commons (File:Arctostaphylos uva-ursi 2 RF.jpg, CC BY 4.0).\nSphagnum moss: Wikimedia Commons (File:Sphagnum moss in Panthertown Valley bog.jpg, CC0).',
+                'Black spruce: Wikimedia Commons (File:Black spruce stand at Arctic Chalet, Inuvik, NT.jpg, CC BY-SA 3.0).\nLodgepole pine: Wikimedia Commons (File:Pinus contorta 28289.JPG, CC BY-SA 3.0).',
               ),
             ),
           ),
@@ -756,20 +724,9 @@ class ReferencesPage extends StatelessWidget {
             index: 6,
             child: ListTile(
               leading: Icon(Icons.pets_outlined),
-              title: Text('Animal Image Credits (1)'),
+              title: Text('Animal Image Credits'),
               subtitle: Text(
-                'Moose: Wikimedia Commons (File:Alce (Alces alces), Parque nacional y reserva Denali, Alaska, Estados Unidos, 2017-08-30, DD 52.jpg, CC BY-SA 4.0).\nGray wolf: Wikimedia Commons (File:Loup gris (Canis lupus ).jpg, CC BY-SA 4.0).\nCanada lynx: Wikimedia Commons (File:Canada lynx by Michael Zahra.jpg, CC BY-SA 3.0).',
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          const AnimatedInfoCard(
-            index: 7,
-            child: ListTile(
-              leading: Icon(Icons.pets_outlined),
-              title: Text('Animal Image Credits (2)'),
-              subtitle: Text(
-                'Snowshoe hare: Wikimedia Commons (File:Lepus americanus - Blomidon Provincial Park 03.jpg, CC BY-SA 4.0).\nBoreal owl: Wikimedia Commons (File:Aegolius funereus by vmoser.jpg, CC BY 4.0).',
+                'Moose: Wikimedia Commons (File:Alce (Alces alces), Parque nacional y reserva Denali, Alaska, Estados Unidos, 2017-08-30, DD 52.jpg, CC BY-SA 4.0).\nCanada lynx: Wikimedia Commons (File:Canada lynx by Michael Zahra.jpg, CC BY-SA 3.0).',
               ),
             ),
           ),
