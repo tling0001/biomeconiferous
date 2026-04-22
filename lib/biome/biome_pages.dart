@@ -360,6 +360,11 @@ class _SpeciesGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final orderedItems = [
+      ...items.where((entry) => imagesByName.containsKey(entry.name)),
+      ...items.where((entry) => !imagesByName.containsKey(entry.name)),
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -371,8 +376,8 @@ class _SpeciesGroup extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        ...List.generate(items.length, (index) {
-          final entry = items[index];
+        ...List.generate(orderedItems.length, (index) {
+          final entry = orderedItems[index];
           final image = imagesByName[entry.name];
           final imageAnimationIndex = animationBaseIndex + (index * 2);
           final infoAnimationIndex = imageAnimationIndex + 1;
