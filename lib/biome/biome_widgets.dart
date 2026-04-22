@@ -218,7 +218,7 @@ class ComparisonTable extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Terrestrial vs Aquatic Components', style: textTheme.titleLarge),
+        Text('Main Terrestrial Biome Traits', style: textTheme.titleLarge),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -229,17 +229,10 @@ class ComparisonTable extends StatelessWidget {
           ),
           child: Column(
             children: [
-              const TableHeader(
-                cells: [
-                  'Category',
-                  'Main Terrestrial Biome',
-                  'Aquatic Biome Parts',
-                ],
-              ),
+              const TableHeader(cells: ['Category', 'Main Terrestrial Biome']),
               ...rows.map(
-                (row) => TableRowContent(
-                  cells: [row.category, row.terrestrial, row.aquatic],
-                ),
+                (row) =>
+                    TableRowContent(cells: [row.category, row.terrestrial]),
               ),
             ],
           ),

@@ -20,9 +20,8 @@ class AdaptationItem {
 }
 
 class ComparisonRow {
-  const ComparisonRow(this.category, this.terrestrial, this.aquatic);
+  const ComparisonRow(this.category, this.terrestrial);
 
   final String category;
   final String terrestrial;
-  final String aquatic;
 }

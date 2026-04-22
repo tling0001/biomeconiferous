@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'biome_data.dart';
 import 'biome_models.dart';
@@ -141,41 +142,66 @@ class CharacteristicsPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Coniferous forests are usually pretty cold, with long winters, short growing seasons, and moderate precipitation that often falls as snow. Nearby aquatic systems are commonly cold, oxygen-rich, and strongly seasonal due to snow melting in the spring.',
+            'Coniferous forests are usually pretty cold, with long winters, short growing seasons, and moderate precipitation that often falls as snow.',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 16),
-          const AnimatedInfoCard(
-            index: 0,
-            child: ComparisonTable(
-              rows: [
-                ComparisonRow(
-                  'Distribution/location',
-                  'Northern North America, Europe, and Asia; mountain belts at lower latitudes',
-                  'Cold streams, bogs, ponds, and lakes within and around coniferous regions',
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final veryLargeLayout = constraints.maxWidth >= 1200;
+
+              const traitsTable = AnimatedInfoCard(
+                index: 0,
+                child: ComparisonTable(
+                  rows: [
+                    ComparisonRow(
+                      'Distribution/location',
+                      'Northern North America, Europe, and Asia; mountain belts at lower latitudes',
+                    ),
+                    ComparisonRow(
+                      'Precipitation / Physical-Chemical Environment',
+                      'About 30-85 cm/year; much as snow',
+                    ),
+                    ComparisonRow(
+                      'Temperature',
+                      'Average annually about -5 C to 10 C',
+                    ),
+                    ComparisonRow(
+                      'Climate / Geological Features',
+                      'Acidic soils, slow decomposition, glacial landforms common',
+                    ),
+                    ComparisonRow(
+                      'Seasons',
+                      'Long, cold winters and short, cool summers with a brief growing season',
+                    ),
+                  ],
                 ),
-                ComparisonRow(
-                  'Precipitation / Physical-Chemical Environment',
-                  'About 30-85 cm/year; much as snow',
-                  'Freshwater, low nutrient levels in many systems, high dissolved oxygen in cold water',
-                ),
-                ComparisonRow(
-                  'Temperature',
-                  'Average annually about -5 C to 10 C',
-                  'Water often near 0-15 C depending on season and depth',
-                ),
-                ComparisonRow(
-                  'Climate / Geological Features',
-                  'Acidic soils, slow decomposition, glacial landforms common',
-                  'Glacial lakes, peatlands, stream channels, seasonal ice cover',
-                ),
-                ComparisonRow(
-                  'Seasons',
-                  'Long, cold winters and short, cool summers with a brief growing season',
-                  'Strong seasonal cycles: winter ice cover, spring snowmelt pulses, summer warming, and autumn turnover',
-                ),
-              ],
-            ),
+              );
+
+              const mapCard = AnimatedImageCard(
+                index: 2,
+                title: 'Map of Coniferous Forest/Taiga Distribution',
+                imageAsset: 'assets/images/map_taiga.png',
+                caption:
+                    'Global taiga/coniferous forest zone concentrated across high northern latitudes.',
+              );
+
+              if (!veryLargeLayout) {
+                return const Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [traitsTable, SizedBox(height: 16), mapCard],
+                );
+              }
+
+              return const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(flex: 3, child: traitsTable),
+                  SizedBox(width: 16),
+                  Expanded(flex: 2, child: mapCard),
+                ],
+              );
+            },
           ),
           const SizedBox(height: 16),
           const AnimatedInfoCard(
@@ -205,14 +231,6 @@ class CharacteristicsPage extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
-          const AnimatedImageCard(
-            index: 2,
-            title: 'Map of Coniferous Forest/Taiga Distribution',
-            imageAsset: 'assets/images/map_taiga.png',
-            caption:
-                'Global taiga/coniferous forest zone concentrated across high northern latitudes.',
-          ),
         ],
       ),
     );
@@ -230,115 +248,50 @@ class SpeciesPage extends StatelessWidget {
         builder: (context, constraints) {
           final wideLayout = constraints.maxWidth >= 900;
 
-          final sections = [
-            Expanded(
-              child: _SpeciesGroup(
-                title: 'Plants',
-                icon: Icons.eco_outlined,
-                items: plants,
-                imageCards: const [
-                  AnimatedImageCard(
-                    index: 6,
-                    title: 'Plant Image 1: Black Spruce',
-                    imageAsset: 'assets/images/plant_black_spruce.jpg',
-                    caption:
-                        'Black spruce is highly adapted to cold, nutrient-poor northern soils.',
-                  ),
-                  SizedBox(height: 12),
-                  AnimatedImageCard(
-                    index: 7,
-                    title: 'Plant Image 2: Lodgepole Pine',
-                    imageAsset: 'assets/images/plant_lodgepole_pine.jpg',
-                    caption:
-                        'Lodgepole pine can regenerate rapidly after fire through cone adaptations.',
-                  ),
-                ],
-              ),
-            ),
-            if (wideLayout)
-              const SizedBox(width: 16)
-            else
-              const SizedBox(height: 16),
-            Expanded(
-              child: _SpeciesGroup(
-                title: 'Animals',
-                icon: Icons.pets_outlined,
-                items: animals,
-                imageCards: const [
-                  AnimatedImageCard(
-                    index: 8,
-                    title: 'Animal Image 1: Moose',
-                    imageAsset: 'assets/images/animal_moose.jpg',
-                    caption:
-                        'Moose are large herbivores well-suited to boreal forests and wetlands.',
-                  ),
-                  SizedBox(height: 12),
-                  AnimatedImageCard(
-                    index: 9,
-                    title: 'Animal Image 2: Canada Lynx',
-                    imageAsset: 'assets/images/animal_lynx.jpg',
-                    caption:
-                        'The Canada lynx specializes in snowy habitats and preys heavily on hares.',
-                  ),
-                ],
-              ),
-            ),
-          ];
-
           if (wideLayout) {
-            return Row(
+            return const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: sections,
+              children: [
+                Expanded(
+                  child: _SpeciesGroup(
+                    title: 'Plants',
+                    icon: Icons.eco_outlined,
+                    items: plants,
+                    images: _plantSpeciesImages,
+                    animationBaseIndex: 6,
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: _SpeciesGroup(
+                    title: 'Animals',
+                    icon: Icons.pets_outlined,
+                    items: animals,
+                    images: _animalSpeciesImages,
+                    animationBaseIndex: 18,
+                  ),
+                ),
+              ],
             );
           }
 
-          return Column(
+          return const Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _SpeciesGroup(
                 title: 'Plants',
                 icon: Icons.eco_outlined,
                 items: plants,
-                imageCards: const [
-                  AnimatedImageCard(
-                    index: 6,
-                    title: 'Plant Image 1: Black Spruce',
-                    imageAsset: 'assets/images/plant_black_spruce.jpg',
-                    caption:
-                        'Black spruce is highly adapted to cold, nutrient-poor northern soils.',
-                  ),
-                  SizedBox(height: 12),
-                  AnimatedImageCard(
-                    index: 7,
-                    title: 'Plant Image 2: Lodgepole Pine',
-                    imageAsset: 'assets/images/plant_lodgepole_pine.jpg',
-                    caption:
-                        'Lodgepole pine can regenerate rapidly after fire through cone adaptations.',
-                  ),
-                ],
+                images: _plantSpeciesImages,
+                animationBaseIndex: 6,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               _SpeciesGroup(
                 title: 'Animals',
                 icon: Icons.pets_outlined,
                 items: animals,
-                imageCards: const [
-                  AnimatedImageCard(
-                    index: 8,
-                    title: 'Animal Image 1: Moose',
-                    imageAsset: 'assets/images/animal_moose.jpg',
-                    caption:
-                        'Moose are large herbivores well-suited to boreal forests and wetlands.',
-                  ),
-                  SizedBox(height: 12),
-                  AnimatedImageCard(
-                    index: 9,
-                    title: 'Animal Image 2: Canada Lynx',
-                    imageAsset: 'assets/images/animal_lynx.jpg',
-                    caption:
-                        'The Canada lynx specializes in snowy habitats and preys heavily on hares.',
-                  ),
-                ],
+                images: _animalSpeciesImages,
+                animationBaseIndex: 18,
               ),
             ],
           );
@@ -348,53 +301,181 @@ class SpeciesPage extends StatelessWidget {
   }
 }
 
+class _SpeciesImageData {
+  const _SpeciesImageData({
+    required this.title,
+    required this.imageAsset,
+    required this.caption,
+  });
+
+  final String title;
+  final String imageAsset;
+  final String caption;
+}
+
+const List<_SpeciesImageData> _plantSpeciesImages = [
+  _SpeciesImageData(
+    title: 'Plant Image: Black Spruce',
+    imageAsset: 'assets/images/plant_black_spruce.jpg',
+    caption:
+        'Black spruce is highly adapted to cold, nutrient-poor northern soils.',
+  ),
+  _SpeciesImageData(
+    title: 'Plant Image: Lodgepole Pine',
+    imageAsset: 'assets/images/plant_lodgepole_pine.jpg',
+    caption:
+        'Lodgepole pine can regenerate rapidly after fire through cone adaptations.',
+  ),
+  _SpeciesImageData(
+    title: 'Plant Image: Balsam Fir',
+    imageAsset: 'assets/images/plant_balsam_fir.jpg',
+    caption: 'Balsam fir needles stay active through short growing seasons.',
+  ),
+  _SpeciesImageData(
+    title: 'Plant Image: Bearberry',
+    imageAsset: 'assets/images/plant_bearberry.jpg',
+    caption:
+        'Bearberry grows close to the ground to avoid wind stress and cold.',
+  ),
+  _SpeciesImageData(
+    title: 'Plant Image: Sphagnum Moss',
+    imageAsset: 'assets/images/plant_sphagnum_moss.jpg',
+    caption:
+        'Sphagnum moss stores water and supports acidic peatland conditions.',
+  ),
+];
+
+const List<_SpeciesImageData> _animalSpeciesImages = [
+  _SpeciesImageData(
+    title: 'Animal Image: Moose',
+    imageAsset: 'assets/images/animal_moose.jpg',
+    caption:
+        'Moose are large herbivores well-suited to boreal forests and wetlands.',
+  ),
+  _SpeciesImageData(
+    title: 'Animal Image: Gray Wolf',
+    imageAsset: 'assets/images/animal_gray_wolf.jpg',
+    caption: 'Gray wolves combine social hunting with cold-climate endurance.',
+  ),
+  _SpeciesImageData(
+    title: 'Animal Image: Canada Lynx',
+    imageAsset: 'assets/images/animal_lynx.jpg',
+    caption:
+        'The Canada lynx specializes in snowy habitats and preys heavily on hares.',
+  ),
+  _SpeciesImageData(
+    title: 'Animal Image: Snowshoe Hare',
+    imageAsset: 'assets/images/animal_snowshoe_hare.jpg',
+    caption: 'Snowshoe hares use seasonal camouflage to reduce predation risk.',
+  ),
+  _SpeciesImageData(
+    title: 'Animal Image: Boreal Owl',
+    imageAsset: 'assets/images/animal_boreal_owl.jpg',
+    caption: 'Boreal owls hunt in low light with excellent hearing and vision.',
+  ),
+];
+
 class _SpeciesGroup extends StatelessWidget {
   const _SpeciesGroup({
     required this.title,
     required this.icon,
     required this.items,
-    required this.imageCards,
+    required this.images,
+    required this.animationBaseIndex,
   });
 
   final String title;
   final IconData icon;
   final List<AdaptationItem> items;
-  final List<Widget> imageCards;
+  final List<_SpeciesImageData> images;
+  final int animationBaseIndex;
 
   @override
   Widget build(BuildContext context) {
-    final children = <Widget>[
-      Row(
-        children: [
-          Icon(icon),
-          const SizedBox(width: 8),
-          Text(title, style: Theme.of(context).textTheme.titleLarge),
-        ],
-      ),
-      const SizedBox(height: 12),
-      ...List.generate(
-        items.length,
-        (index) => Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: AnimatedInfoCard(
-            index: index,
-            child: ListTile(
-              leading: CircleAvatar(child: Icon(icon)),
-              title: Text(items[index].name),
-              subtitle: Text(
-                'Adaptation: ${items[index].adaptation}\nHow it helps: ${items[index].benefit}',
-              ),
-            ),
-          ),
-        ),
-      ),
-      const SizedBox(height: 6),
-      ...imageCards,
-    ];
+    assert(items.length == images.length);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: children,
+      children: [
+        Row(
+          children: [
+            Icon(icon),
+            const SizedBox(width: 8),
+            Text(title, style: Theme.of(context).textTheme.titleLarge),
+          ],
+        ),
+        const SizedBox(height: 12),
+        ...List.generate(items.length, (index) {
+          final entry = items[index];
+          final image = images[index];
+          final imageAnimationIndex = animationBaseIndex + (index * 2);
+          final infoAnimationIndex = imageAnimationIndex + 1;
+
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AnimatedImageCard(
+                  index: imageAnimationIndex,
+                  title: image.title,
+                  imageAsset: image.imageAsset,
+                  caption: image.caption,
+                ),
+                const SizedBox(height: 8),
+                AnimatedInfoCard(
+                  index: infoAnimationIndex,
+                  child: ListTile(
+                    leading: CircleAvatar(child: Icon(icon)),
+                    title: Text(entry.name),
+                    subtitle: Text(
+                      'Adaptation: ${entry.adaptation}\nHow it helps: ${entry.benefit}',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }),
+      ],
+    );
+  }
+}
+
+Future<void> _launchReferenceUrl(String url) async {
+  final uri = Uri.parse(url);
+  await launchUrl(uri, mode: LaunchMode.platformDefault);
+}
+
+class _ReferenceLinkCard extends StatelessWidget {
+  const _ReferenceLinkCard({
+    required this.index,
+    required this.title,
+    required this.url,
+  });
+
+  final int index;
+  final String title;
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedInfoCard(
+      index: index,
+      child: ListTile(
+        leading: const Icon(Icons.link),
+        title: Text(title),
+        subtitle: Text(
+          url,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+            decoration: TextDecoration.underline,
+          ),
+        ),
+        onTap: () {
+          _launchReferenceUrl(url);
+        },
+      ),
     );
   }
 }
@@ -410,7 +491,7 @@ class ThreatsPage extends StatelessWidget {
         builder: (context, constraints) {
           final wideLayout = constraints.maxWidth >= 960;
 
-          final threatSection = _ThreatSection(includeImage: !wideLayout);
+          const threatSection = _ThreatSection();
           final visitSection = _VisitSection();
 
           if (wideLayout) {
@@ -435,9 +516,7 @@ class ThreatsPage extends StatelessWidget {
 }
 
 class _ThreatSection extends StatelessWidget {
-  const _ThreatSection({required this.includeImage});
-
-  final bool includeImage;
+  const _ThreatSection();
 
   @override
   Widget build(BuildContext context) {
@@ -486,16 +565,14 @@ class _ThreatSection extends StatelessWidget {
             ),
           ),
         ),
-        if (includeImage) ...[
-          const SizedBox(height: 14),
-          const AnimatedImageCard(
-            index: 4,
-            title: 'Threat Image: Wildfire and Forest Loss',
-            imageAsset: 'assets/images/threat_wildfire.jpg',
-            caption:
-                'Intense wildfires can transform coniferous landscapes and wildlife habitat.',
-          ),
-        ],
+        const SizedBox(height: 14),
+        const AnimatedImageCard(
+          index: 4,
+          title: 'Threat Image: Wildfire and Forest Loss',
+          imageAsset: 'assets/images/threat_wildfire.jpg',
+          caption:
+              'Intense wildfires can transform coniferous landscapes and wildlife habitat.',
+        ),
       ],
     );
   }
@@ -625,53 +702,41 @@ class ReferencesPage extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 14),
-          const AnimatedInfoCard(
+          Text('Links', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
+          const _ReferenceLinkCard(
             index: 0,
-            child: ListTile(
-              leading: Icon(Icons.link),
-              title: Text('Flutter UI Docs'),
-              subtitle: Text('https://docs.flutter.dev/ui'),
-            ),
+            title: 'Flutter UI Docs',
+            url: 'https://docs.flutter.dev/ui',
           ),
           const SizedBox(height: 10),
-          const AnimatedInfoCard(
+          const _ReferenceLinkCard(
             index: 1,
-            child: ListTile(
-              leading: Icon(Icons.link),
-              title: Text('Flutter Material Widgets Catalog'),
-              subtitle: Text('https://docs.flutter.dev/ui/widgets/material'),
-            ),
+            title: 'Flutter Material Widgets Catalog',
+            url: 'https://docs.flutter.dev/ui/widgets/material',
           ),
           const SizedBox(height: 10),
-          const AnimatedInfoCard(
+          const _ReferenceLinkCard(
             index: 2,
-            child: ListTile(
-              leading: Icon(Icons.link),
-              title: Text('WWF: Boreal/Coniferous Forest (Taiga) Overview'),
-              subtitle: Text(
-                'https://www.worldwildlife.org/biomes/boreal-forests-taiga',
-              ),
-            ),
+            title: 'WWF: Boreal/Coniferous Forest (Taiga) Overview',
+            url: 'https://www.worldwildlife.org/biomes/boreal-forests-taiga',
           ),
           const SizedBox(height: 10),
-          const AnimatedInfoCard(
+          const _ReferenceLinkCard(
             index: 3,
-            child: ListTile(
-              leading: Icon(Icons.link),
-              title: Text('National Geographic: Taiga Biome'),
-              subtitle: Text(
-                'https://education.nationalgeographic.org/resource/taiga/',
-              ),
-            ),
+            title: 'National Geographic: Taiga Biome',
+            url: 'https://education.nationalgeographic.org/resource/taiga/',
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 16),
+          Text('Image Credits', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
           const AnimatedInfoCard(
             index: 4,
             child: ListTile(
               leading: Icon(Icons.photo_library_outlined),
-              title: Text('Image Credits (Sourced)'),
+              title: Text('Site Images'),
               subtitle: Text(
-                'Home hero: Wikimedia Commons (File:Siberian autumn in taiga..JPG, CC BY-SA 3.0).\nLodgepole pine: Wikimedia Commons (File:Pinus contorta 28289.JPG, CC BY-SA 3.0).\nTaiga map: Wikimedia Commons (File:Taiga ecoregion.png, CC BY-SA 3.0).',
+                'Home hero: Wikimedia Commons (File:Siberian autumn in taiga..JPG, CC BY-SA 3.0).\nTaiga map: Wikimedia Commons (File:Taiga ecoregion.png, CC BY-SA 3.0).\nWildfire: Wikimedia Commons (File:Lick Fire on the Umatilla National Forest burning at night.jpg, Public domain).',
               ),
             ),
           ),
@@ -679,10 +744,32 @@ class ReferencesPage extends StatelessWidget {
           const AnimatedInfoCard(
             index: 5,
             child: ListTile(
-              leading: Icon(Icons.info_outline),
-              title: Text('Image Credits (Additional Sourced Media)'),
+              leading: Icon(Icons.park_outlined),
+              title: Text('Plant Image Credits'),
               subtitle: Text(
-                'Black spruce: Wikimedia Commons (File:Black spruce stand at Arctic Chalet, Inuvik, NT.jpg, CC BY-SA 3.0).\nMoose: Wikimedia Commons (File:Alce (Alces alces), Parque nacional y reserva Denali, Alaska, Estados Unidos, 2017-08-30, DD 52.jpg, CC BY-SA 4.0).\nCanada lynx: Wikimedia Commons (File:Canada lynx by Michael Zahra.jpg, CC BY-SA 3.0).\nWildfire: Wikimedia Commons (File:Lick Fire on the Umatilla National Forest burning at night.jpg, Public domain).',
+                'Black spruce: Wikimedia Commons (File:Black spruce stand at Arctic Chalet, Inuvik, NT.jpg, CC BY-SA 3.0).\nLodgepole pine: Wikimedia Commons (File:Pinus contorta 28289.JPG, CC BY-SA 3.0).\nBalsam fir: Wikimedia Commons (File:Abies balsamea.jpg, Public domain).\nBearberry: Wikimedia Commons (File:Arctostaphylos uva-ursi 2 RF.jpg, CC BY 4.0).\nSphagnum moss: Wikimedia Commons (File:Sphagnum moss in Panthertown Valley bog.jpg, CC0).',
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          const AnimatedInfoCard(
+            index: 6,
+            child: ListTile(
+              leading: Icon(Icons.pets_outlined),
+              title: Text('Animal Image Credits (1)'),
+              subtitle: Text(
+                'Moose: Wikimedia Commons (File:Alce (Alces alces), Parque nacional y reserva Denali, Alaska, Estados Unidos, 2017-08-30, DD 52.jpg, CC BY-SA 4.0).\nGray wolf: Wikimedia Commons (File:Loup gris (Canis lupus ).jpg, CC BY-SA 4.0).\nCanada lynx: Wikimedia Commons (File:Canada lynx by Michael Zahra.jpg, CC BY-SA 3.0).',
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          const AnimatedInfoCard(
+            index: 7,
+            child: ListTile(
+              leading: Icon(Icons.pets_outlined),
+              title: Text('Animal Image Credits (2)'),
+              subtitle: Text(
+                'Snowshoe hare: Wikimedia Commons (File:Lepus americanus - Blomidon Provincial Park 03.jpg, CC BY-SA 4.0).\nBoreal owl: Wikimedia Commons (File:Aegolius funereus by vmoser.jpg, CC BY 4.0).',
               ),
             ),
           ),
